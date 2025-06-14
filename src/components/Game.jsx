@@ -28,13 +28,12 @@ const Image = styled.img`
     background-position: center;
     width: 100%;
     z-index: 2;
-    height: 100%;
-    
+    height: 600px;
 `
 const XAxisLine = styled.span`
     flex: 100%;
     display: grid;
-    grid-template-columns: repeat(100, 1%);
+    grid-template-rows: repeat(100, 6px);
 `
 
 const YAxisLine = styled.span`
@@ -50,7 +49,7 @@ const BoardComponent = styled.div`
     bottom: 800px;
     z-index: 2;
     height: 100%;
-    grid-template-rows: repeat(100, 0.5vw);
+    grid-template-columns: repeat(100, 1%);
 `
 const ImageContainer = styled.div`
     display: flex;
@@ -61,19 +60,6 @@ const ImageContainer = styled.div`
     cursor: pointer;
     width: 100%;
 `
-
-const mockData = [
-    {
-        x: 69,
-        y: 75,
-        name: 'name_1',
-    },
-    {
-        x: 64,
-        y: 17,
-        name: 'name_2'
-    }
-]
 
 export default function Game() {
     const [showNames, setShowNames] = useState(false);
@@ -102,6 +88,7 @@ export default function Game() {
         let y = e.pageY;
         let cordX = (e.target.getAttribute('data-x'))
         let cordY = (e.target.getAttribute('data-y'))
+        console.log(cordX, cordY)
         if (cordX && cordY) {
             setCords({x: cordX, y: cordY})
         }
@@ -115,11 +102,6 @@ export default function Game() {
 
     useEffect(() => {
         if (cords && clickedName) {
-            mockData.forEach(data => {
-                if (data.x == cords.x && data.y == cords.y && data.name == cords.name) {
-                    console.log('Got it')
-                }
-            })
             setCords(null);
             setClickedName(null)
         }
