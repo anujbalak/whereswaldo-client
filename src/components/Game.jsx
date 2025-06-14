@@ -10,11 +10,10 @@ const GameBodyContainer = styled.div`
     width: fit-content;
     justify-content: center;
     align-items: center;
-    padding: 1em;
+    padding: 2em;
     border-radius: 10px;
     border: #d3c15c solid 5px;
     gap: 1em;
-    cursor: pointer;
     flex-wrap: wrap;
     margin: 1em;
     height: 100%;
@@ -34,14 +33,13 @@ const Image = styled.img`
 `
 const XAxisLine = styled.span`
     flex: 100%;
-    display: inline-flex;
+    display: grid;
+    grid-template-columns: repeat(100, 1%);
 `
 
 const YAxisLine = styled.span`
     //border: 1px solid black;
     display: inline-block;
-    flex: 1%;
-    height: 100%;
 `
 
 const BoardComponent = styled.div`
@@ -52,7 +50,7 @@ const BoardComponent = styled.div`
     bottom: 800px;
     z-index: 2;
     height: 100%;
-    grid-template-rows: repeat(100, minmax(4px, 6px));
+    grid-template-rows: repeat(100, 0.5vw);
 `
 const ImageContainer = styled.div`
     display: flex;
@@ -60,15 +58,32 @@ const ImageContainer = styled.div`
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
+    cursor: pointer;
+    width: 100%;
 `
+
+const mockData = [
+    {
+        x: 69,
+        y: 75,
+        name: 'name_1',
+    },
+    {
+        x: 64,
+        y: 17,
+        name: 'name_2'
+    }
+]
 
 export default function Game() {
     const [showNames, setShowNames] = useState(false);
-    const optionsRef = createRef(null)
+    const optionsRef = createRef(null);
+    const [clickedName, setClickedName] = useState(null);
+    const [cords, setCords] = useState(null);
 
     useEffect(() => {
         if (showNames && optionsRef.current) {
-            optionsRef.current.style.display = 'grid'
+            optionsRef.current.style.display = 'flex'
         } else if (!showNames && optionsRef.current) {
             optionsRef.current.style.display = 'none'
         }
@@ -83,28 +98,43 @@ export default function Game() {
     })
     const handleClick = (e) => {
         setShowNames(true)
-        let x  = e.clientX;
-        let y = e.clientY;
+        let x  = e.pageX;
+        let y = e.pageY;
+        let cordX = (e.target.getAttribute('data-x'))
+        let cordY = (e.target.getAttribute('data-y'))
+        if (cordX && cordY) {
+            setCords({x: cordX, y: cordY})
+        }
+
         if (optionsRef.current) {
-            optionsRef.current.style.display = 'none'
-            optionsRef.current.style.left = `${x}px`
-            optionsRef.current.style.top = `${y}px`
-            setTimeout(() => {
-                optionsRef.current.style.display = 'grid'
-            })
+            optionsRef.current.style.left = `${x - 40}px`
+            optionsRef.current.style.top = `${y- 50}px`
         }
     }
 
+
+    useEffect(() => {
+        if (cords && clickedName) {
+            mockData.forEach(data => {
+                if (data.x == cords.x && data.y == cords.y && data.name == cords.name) {
+                    console.log('Got it')
+                }
+            })
+            setCords(null);
+            setClickedName(null)
+        }
+
+    }, [cords, clickedName])
 
     return (
         <GameBodyContainer >
                 <Title>Shinchan world</Title>
                 <ImageContainer >
-                    <Image src="/images/shinchan.webp" alt="" />
+                    <Image src="/images/shinchan.webp" alt="" data-picture={true}/>
                     <Board onClick={handleClick} />
                 </ImageContainer>
-                
-                <NameOptions ref={optionsRef}/>
+                <Characters />
+                <NameOptions ref={optionsRef} setName={setClickedName}/>
         </GameBodyContainer>
     )
 }
@@ -141,26 +171,56 @@ function Board({onClick}) {
 
 
 const CharactersContainer = styled.div`
-    
+    display: flex;
+    gap: 1em;
+    width: 100%;
+    justify-content: space-evenly;
+    background-color: #eebe88;
+    border: #836645 solid 5px;
+    border-radius: 10px;
+    padding: 1em 0;
 `
 const Character = styled.div`
-    
+    display: grid;
+    gap: 1em;
+    grid-template-rows: auto;
+    background-color: #e66c87;
+    padding: 1em;
+    border-radius: 10px;
 `
 
 const CharacterName = styled.span`
-    
+    font-size: 1.3rem;
 `
 const CharacterImage = styled.img`
-    
+    border-radius: 10px;
 `
 function Characters() {
     return (
         <CharactersContainer>
             <Character>
                 <CharacterName>
-                    NAME 1
+                    Name 1
                 </CharacterName>
-                <CharacterImage />
+                <CharacterImage src="/images/mock.jpg" alt=""/>
+            </Character>
+            <Character>
+                <CharacterName>
+                    Name 2
+                </CharacterName>
+                <CharacterImage src="/images/mock.jpg" alt=""/>
+            </Character>
+            <Character>
+                <CharacterName>
+                    Name 3
+                </CharacterName>
+                <CharacterImage src="/images/mock.jpg" alt=""/>
+            </Character>
+            <Character>
+                <CharacterName>
+                    Name 4
+                </CharacterName>
+                <CharacterImage src="/images/mock.jpg" alt=""/>
             </Character>
         </CharactersContainer>
     )   
