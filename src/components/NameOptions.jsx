@@ -48,16 +48,16 @@ export function NameOptions({ref, setName}) {
             <CursorClick />
             <Container>
                 <Option onClick={() => setName('name_1')}>
-                    Name 1
+                   Interesting Character
                 </Option>
                 <Option onClick={() => setName('name_2')}>
-                    Name 2
+                    Silent Girl
                 </Option>
                 <Option onClick={() => setName('name_3')}>
-                    Name 3
+                    Goggle Man
                 </Option>
                 <Option onClick={() => setName('name_4')}>
-                    Name 4
+                    Moustache man
                 </Option>
             </Container>
         </OptionsContainer>    

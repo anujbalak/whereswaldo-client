@@ -13,7 +13,7 @@ const GameBodyContainer = styled.div`
     padding: 2em;
     border-radius: 10px;
     border: #d3c15c solid 5px;
-    gap: 1em;
+    gap: 3em;
     flex-wrap: wrap;
     margin: 1em;
     height: 100%;
@@ -46,7 +46,7 @@ const BoardComponent = styled.div`
     flex-wrap: wrap;
     position: sticky;
     width: 100%;
-    bottom: 800px;
+    bottom: 600px;
     z-index: 2;
     height: 100%;
     grid-template-columns: repeat(100, 1%);
@@ -59,6 +59,7 @@ const ImageContainer = styled.div`
     flex-wrap: wrap;
     cursor: pointer;
     width: 100%;
+    height: 600px;
 `
 
 export default function Game() {
@@ -161,14 +162,21 @@ const CharactersContainer = styled.div`
     border: #836645 solid 5px;
     border-radius: 10px;
     padding: 1em 0;
+    flex-wrap: wrap;
+    margin-top: 1em;
 `
 const Character = styled.div`
-    display: grid;
+    display: flex;
     gap: 1em;
-    grid-template-rows: auto;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     background-color: #e66c87;
     padding: 1em;
     border-radius: 10px;
+    white-space: initial;
+    width: fit-content;
+    max-width: 200px;
 `
 
 const CharacterName = styled.span`
@@ -176,33 +184,35 @@ const CharacterName = styled.span`
 `
 const CharacterImage = styled.img`
     border-radius: 10px;
+    width: 100px;
+    height: 100px;
 `
 function Characters() {
     return (
         <CharactersContainer>
             <Character>
                 <CharacterName>
-                    Name 1
+                   Interesting Character
                 </CharacterName>
-                <CharacterImage src="/images/mock.jpg" alt=""/>
+                <CharacterImage src="/easy/easy-1.jpg" alt=""/>
             </Character>
             <Character>
                 <CharacterName>
-                    Name 2
+                    Silent Girl
                 </CharacterName>
-                <CharacterImage src="/images/mock.jpg" alt=""/>
+                <CharacterImage src="/easy/easy-2.jpg" alt=""/>
             </Character>
             <Character>
                 <CharacterName>
-                    Name 3
+                    Goggle man (IDK)
                 </CharacterName>
-                <CharacterImage src="/images/mock.jpg" alt=""/>
+                <CharacterImage src="/easy/easy-3.jpg" alt=""/>
             </Character>
             <Character>
                 <CharacterName>
-                    Name 4
+                    Nice moustache (never watched Shinchan :)
                 </CharacterName>
-                <CharacterImage src="/images/mock.jpg" alt=""/>
+                <CharacterImage src="/easy/easy-4.jpg" alt=""/>
             </Character>
         </CharactersContainer>
     )   
