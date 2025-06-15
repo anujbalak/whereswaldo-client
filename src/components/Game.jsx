@@ -3,6 +3,8 @@ import Header from "./Header";
 import { createRef, useEffect, useRef, useState } from "react";
 import { NameOptions } from "./NameOptions";
 import { postEasyGameValues } from "../module/queries";
+import { useOutletContext } from "react-router";
+import { handleChoice } from "../module/gameHandler";
 
 const GameBodyContainer = styled.div`
     display: flex;
@@ -68,6 +70,7 @@ export default function Game() {
     const optionsRef = createRef(null);
     const [clickedName, setClickedName] = useState(null);
     const [cords, setCords] = useState(null);
+    const { setEasyCharacterNames, easyCharacterNames, setMessage } = useOutletContext();
 
     useEffect(() => {
         if (showNames && optionsRef.current) {
@@ -103,10 +106,9 @@ export default function Game() {
 
     useEffect(() => {
         if (cords && clickedName) {
-            console.log(clickedName, cords)
             const sendCords = async () => {
                 const result = await postEasyGameValues(clickedName, cords.x, cords.y)
-                console.log(result);
+                handleChoice(result, easyCharacterNames, setEasyCharacterNames, setMessage);
             }
             sendCords()
             setCords(null);
