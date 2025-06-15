@@ -1,3 +1,4 @@
+import { useOutletContext } from "react-router"
 import styled from "styled-components"
 
 const Container = styled.div`
@@ -43,23 +44,26 @@ const Option = styled.span`
 `
 
 export function NameOptions({ref, setName}) {
+    const {easyCharacterNames} = useOutletContext()
     return (
         <OptionsContainer ref={ref}>
             <CursorClick />
-            <Container>
-                <Option onClick={() => setName('name_1')}>
-                   Interesting Character
-                </Option>
-                <Option onClick={() => setName('name_2')}>
-                    Silent Girl
-                </Option>
-                <Option onClick={() => setName('name_3')}>
-                    Goggle Man
-                </Option>
-                <Option onClick={() => setName('name_4')}>
-                    Moustache man
-                </Option>
-            </Container>
+            {easyCharacterNames &&
+                <Container>
+                    <Option onClick={() => setName(easyCharacterNames[0].name)}>
+                    Interesting Character
+                    </Option>
+                    <Option onClick={() => setName(easyCharacterNames[1].name)}>
+                        Goggle Man
+                    </Option>
+                    <Option onClick={() => setName(easyCharacterNames[2].name)}>
+                        Silent Girl
+                    </Option>
+                    <Option onClick={() => setName(easyCharacterNames[3].name)}>
+                        Moustache man
+                    </Option>
+                </Container>
+            }
         </OptionsContainer>    
     )
 }

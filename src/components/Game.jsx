@@ -2,6 +2,7 @@ import styled from "styled-components";
 import Header from "./Header";
 import { createRef, useEffect, useRef, useState } from "react";
 import { NameOptions } from "./NameOptions";
+import { postEasyGameValues } from "../module/queries";
 
 const GameBodyContainer = styled.div`
     display: flex;
@@ -87,9 +88,8 @@ export default function Game() {
         setShowNames(true)
         let x  = e.pageX;
         let y = e.pageY;
-        let cordX = (e.target.getAttribute('data-x'))
-        let cordY = (e.target.getAttribute('data-y'))
-        console.log(cordX, cordY)
+        let cordX = Number(e.target.getAttribute('data-x'))
+        let cordY = Number(e.target.getAttribute('data-y'))
         if (cordX && cordY) {
             setCords({x: cordX, y: cordY})
         }
@@ -103,6 +103,12 @@ export default function Game() {
 
     useEffect(() => {
         if (cords && clickedName) {
+            console.log(clickedName, cords)
+            const sendCords = async () => {
+                const result = await postEasyGameValues(clickedName, cords.x, cords.y)
+                console.log(result);
+            }
+            sendCords()
             setCords(null);
             setClickedName(null)
         }
@@ -198,15 +204,15 @@ function Characters() {
             </Character>
             <Character>
                 <CharacterName>
-                    Silent Girl
-                </CharacterName>
-                <CharacterImage src="/easy/easy-2.jpg" alt=""/>
-            </Character>
-            <Character>
-                <CharacterName>
                     Goggle man (IDK)
                 </CharacterName>
                 <CharacterImage src="/easy/easy-3.jpg" alt=""/>
+            </Character>
+            <Character>
+                <CharacterName>
+                    Silent Girl
+                </CharacterName>
+                <CharacterImage src="/easy/easy-2.jpg" alt=""/>
             </Character>
             <Character>
                 <CharacterName>
