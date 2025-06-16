@@ -1,12 +1,13 @@
 import styled from "styled-components";
-import Header from "./Header";
 import { createRef, useEffect, useRef, useState } from "react";
 import { NameOptions } from "./NameOptions";
 import { postEasyGameValues } from "../module/queries";
 import { useOutletContext } from "react-router";
 import { handleChoice } from "../module/gameHandler";
+import Timer from "./Timer";
+import FinishGame from "./GameWin";
 
-const GameBodyContainer = styled.div`
+export const GameBodyContainer = styled.div`
     display: flex;
     flex-direction: column;
     background-color: #eef3c0;
@@ -24,6 +25,7 @@ const GameBodyContainer = styled.div`
 const Title = styled.span`
     font-size: 1.8rem;
     font-weight: 700;
+    display: grid;
 `
 
 const Image = styled.img`
@@ -70,7 +72,14 @@ export default function Game() {
     const optionsRef = createRef(null);
     const [clickedName, setClickedName] = useState(null);
     const [cords, setCords] = useState(null);
-    const { setEasyCharacterNames, easyCharacterNames, setMessage } = useOutletContext();
+    const { setEasyCharacterNames, easyCharacterNames, setMessage, setRefresh} = useOutletContext();
+    const [isStart, setStart] = useState(false)
+    const [isFinish, setFinish] = useState(false);
+    const timerRef = useRef(null)
+
+    useEffect(() => {
+        setRefresh(true)
+    }, [setRefresh])
 
     useEffect(() => {
         if (showNames && optionsRef.current) {
@@ -117,15 +126,40 @@ export default function Game() {
 
     }, [cords, clickedName])
 
+    useEffect(() => {
+        if (easyCharacterNames.length > 0) {
+            if (easyCharacterNames.every(name => name.found === true)) {
+                setFinish(true)
+                
+            }
+        }
+    }, [easyCharacterNames, setMessage])
+
+    useEffect(() => {
+        if (isFinish) {
+            setMessage('You Won')
+        }
+    }, [isFinish, setMessage])    
+
     return (
         <GameBodyContainer >
-                <Title>Shinchan world</Title>
-                <ImageContainer >
-                    <Image src="/images/shinchan.webp" alt="" data-picture={true}/>
-                    <Board onClick={handleClick} />
-                </ImageContainer>
-                <Characters />
-                <NameOptions ref={optionsRef} setName={setClickedName}/>
+                <Title>Shinchan world 
+                    <Timer setStart={setStart} setFinish={setFinish} finish={isFinish} ref={timerRef}/>
+
+                </Title> 
+                {isStart &&
+                <>
+                    <ImageContainer >
+                        <Image src="/images/shinchan.webp" alt="" data-picture={true}/>
+                        <Board onClick={handleClick} />
+                    </ImageContainer>
+                    <Characters />
+                    <NameOptions ref={optionsRef} setName={setClickedName}/>
+                </>
+                }      
+                {isFinish &&
+                    <FinishGame timerRef={timerRef}/>
+                }  
         </GameBodyContainer>
     )
 }
@@ -179,7 +213,7 @@ const Character = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: #e66c87;
+    background: ${props => props.$found ? "#7bf1b6" : "#e66c87"};
     padding: 1em;
     border-radius: 10px;
     white-space: initial;
@@ -196,32 +230,57 @@ const CharacterImage = styled.img`
     height: 100px;
 `
 function Characters() {
+    const {easyCharacterNames} = useOutletContext();
+    
     return (
         <CharactersContainer>
-            <Character>
-                <CharacterName>
-                   Interesting Character
-                </CharacterName>
-                <CharacterImage src="/easy/easy-1.jpg" alt=""/>
-            </Character>
-            <Character>
-                <CharacterName>
-                    Goggle man (IDK)
-                </CharacterName>
-                <CharacterImage src="/easy/easy-3.jpg" alt=""/>
-            </Character>
-            <Character>
-                <CharacterName>
-                    Silent Girl
-                </CharacterName>
-                <CharacterImage src="/easy/easy-2.jpg" alt=""/>
-            </Character>
-            <Character>
-                <CharacterName>
-                    Nice moustache (never watched Shinchan :)
-                </CharacterName>
-                <CharacterImage src="/easy/easy-4.jpg" alt=""/>
-            </Character>
+            {easyCharacterNames.length > 0 &&
+                <>
+                    <CharacterCard 
+                        name="Interesting Character"
+                        found={easyCharacterNames[0].found}
+                        img="/easy/easy-1.jpg"
+                    />
+                    <CharacterCard 
+                        name="Goggle Man"
+                        found={easyCharacterNames[1].found}
+                        img="/easy/easy-3.jpg"
+                    />
+                    <CharacterCard 
+                        name="Silent Girl (maybe?)"
+                        found={easyCharacterNames[2].found}
+                        img="/easy/easy-2.jpg"
+                    />
+                    <CharacterCard 
+                        name="Nice moustache (never watched Shinchan :)"
+                        found={easyCharacterNames[3].found}
+                        img="/easy/easy-4.jpg"
+                    />
+                </>
+            }
         </CharactersContainer>
     )   
 }
+
+const CharacterCard = ({name, found, img}) => {
+    return (
+        <>
+            {found ?
+                <Character $found>
+                    <CharacterName>
+                        {name}
+                    </CharacterName>
+                    <CharacterImage src={img} alt=""/>
+                </Character>
+            :
+                <Character>
+                    <CharacterName>
+                        {name}
+                    </CharacterName>
+                    <CharacterImage src={img} alt=""/>
+                </Character>
+            }
+        </>
+    )
+}
+
