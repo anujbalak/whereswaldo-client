@@ -25,7 +25,7 @@ export default function Header() {
             <HeaderComponent>
                 <TitleContainer>
                     <Link to="/">
-                        <Title>whereswally</Title>
+                        <Title>whereswaldo</Title>
                     </Link>
                 </TitleContainer>
             </HeaderComponent>
